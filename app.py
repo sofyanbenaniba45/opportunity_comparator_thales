@@ -51,11 +51,11 @@ st.markdown("""
 # ──────────────────────────────────────────────
 _logo_b64 = base64.b64encode(open("Thales Logo.png", "rb").read()).decode()
 st.markdown(
-    f'<img src="data:image/png;base64,{_logo_b64}" width="140">',
+    f'<img src="data:image/png;base64,{_logo_b64}" width="420">',
     unsafe_allow_html=True,
 )
 
-st.title("📊 Commercial Opportunity Comparator")
+st.title("Opportunity Comparator")
 st.markdown("Compare your Excel files between two quarters and export the report.")
 
 # ──────────────────────────────────────────────
