@@ -58,8 +58,11 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("📈 Commercial Opportunity Comparator")
-st.markdown("Compare your Excel files between two quarters and export the report.")
+st.markdown(
+    '<h1 style="color:#242B75; font-size:25pt;">📈 Commercial Opportunity Comparator</h1>',
+    unsafe_allow_html=True,
+)
+st.markdown("Compare your Excel files between two quarters and export the report (MOIR, SER, Order In Take, Extract T360...).")
 
 # ──────────────────────────────────────────────
 # File upload
@@ -67,11 +70,17 @@ st.markdown("Compare your Excel files between two quarters and export the report
 col_upload_l, col_upload_r = st.columns(2)
 
 with col_upload_l:
-    st.subheader("📁 Previous Quarter File (N-1)")
+    st.markdown(
+        '<h3 style="color:#5DBFD5;">📁 Previous Quarter File (N-1)</h3>',
+        unsafe_allow_html=True,
+    )
     file_prev = st.file_uploader("Select the N-1 file", type=["xlsx", "xls"], key="prev")
 
 with col_upload_r:
-    st.subheader("📁 Current Quarter File")
+    st.markdown(
+        '<h3 style="color:#5DBFD5;">📁 Current Quarter File</h3>',
+        unsafe_allow_html=True,
+    )
     file_curr = st.file_uploader("Select the current file", type=["xlsx", "xls"], key="curr")
 
 
@@ -198,7 +207,10 @@ if file_prev and file_curr:
         # Filters
         # ─────────────────────────────────────
         st.markdown("---")
-        st.subheader("🔍 Detail Table")
+        st.markdown(
+            '<h3 style="color:#5DBFD5;">🔍 Detail Table</h3>',
+            unsafe_allow_html=True,
+        )
 
         search_query = st.text_input("🔎 Search by Opportunity Name", placeholder="Type to filter...")
 
@@ -345,7 +357,10 @@ if file_prev and file_curr:
         # Exports
         # ─────────────────────────────────────
         st.markdown("---")
-        st.subheader("📥 Download Report")
+        st.markdown(
+            '<h3 style="color:#5DBFD5;">📥 Download Report</h3>',
+            unsafe_allow_html=True,
+        )
 
         # ── Export by GBU/BL ──
         st.markdown("**By GBU/BL**")
@@ -419,6 +434,13 @@ else:
         """)
 
 st.markdown("---")
+st.markdown(
+    '<p style="text-align:right; color:#888; font-size:0.78rem; line-height:1.5; margin-bottom:2px;">'
+    '🔒 This application is hosted locally on your machine. No data leaves your workstation, '
+    'meeting Thales C3 security level requirements.'
+    '</p>',
+    unsafe_allow_html=True,
+)
 st.markdown(
     '<p style="text-align:right; color:#666; font-size:0.85rem;">'
     'For any questions or enhancement requests, please contact sofyan.benaniba@thalesgroup.com'
