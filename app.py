@@ -3,6 +3,7 @@ Streamlit application to compare commercial opportunities between two quarters.
 Auteur : Sofyan BENANIBA
 Launch: streamlit run app.py
 """
+import base64
 import io
 import pandas as pd
 import streamlit as st
@@ -48,12 +49,14 @@ st.markdown("""
 # ──────────────────────────────────────────────
 # Header (logo + title)
 # ──────────────────────────────────────────────
-col_logo, col_title = st.columns([1, 5])
-with col_logo:
-    st.image("Thales Logo.png", width=150)
-with col_title:
-    st.title("📊 Commercial Opportunity Comparator")
-    st.markdown("Compare your Excel files between two quarters and export the report.")
+_logo_b64 = base64.b64encode(open("Thales Logo.png", "rb").read()).decode()
+st.markdown(
+    f'<img src="data:image/png;base64,{_logo_b64}" width="140">',
+    unsafe_allow_html=True,
+)
+
+st.title("📊 Commercial Opportunity Comparator")
+st.markdown("Compare your Excel files between two quarters and export the report.")
 
 # ──────────────────────────────────────────────
 # File upload
