@@ -7,6 +7,7 @@ import base64
 import io
 import pandas as pd
 import streamlit as st
+import streamlit.components.v1 as components
 
 from comparison import compare_dataframes, KEY_COL, normalize_key, values_differ
 from excel_export import generate_excel, generate_excel_by_ou
@@ -16,7 +17,7 @@ from word_export import generate_word, generate_word_by_ou
 # Page configuration
 # ──────────────────────────────────────────────
 st.set_page_config(
-    page_title="Opportunity Comparator",
+    page_title="Thales OI Evolution",
     page_icon="📈",
     layout="wide",
 )
@@ -29,6 +30,10 @@ st.markdown("""
     .block-container {
         padding-top: 1rem;
     }
+    footer {
+        visibility: hidden;
+    }
+
     .kpi-card {
         background: #f8f9fa;
         border-radius: 10px;
@@ -49,6 +54,25 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# Hide the "Record a screencast" item in the ⋮ menu, keep the rest of the menu intact
+components.html(
+    """
+    <script>
+    function hideRecordScreencast() {
+        const doc = window.parent.document;
+        doc.querySelectorAll('[role="menuitem"], li').forEach((el) => {
+            if (el.innerText && el.innerText.trim().startsWith('Record a screencast')) {
+                el.style.display = 'none';
+            }
+        });
+    }
+    new MutationObserver(hideRecordScreencast).observe(window.parent.document.body, {childList: true, subtree: true});
+    hideRecordScreencast();
+    </script>
+    """,
+    height=0,
+)
+
 # ──────────────────────────────────────────────
 # Header (logo + title)
 # ──────────────────────────────────────────────
@@ -59,7 +83,7 @@ st.markdown(
 )
 
 st.markdown(
-    '<h1 style="color:#242B75; font-size:25pt;">📈 Commercial Opportunity Comparator</h1>',
+    '<h1 style="color:#242B75; font-size:25pt;">📈 Order In Take Evolution</h1>',
     unsafe_allow_html=True,
 )
 st.markdown("Compare your Excel files between two quarters and export the report (MOIR, SER, Order In Take, Extract T360...).")
