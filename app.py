@@ -46,10 +46,14 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ──────────────────────────────────────────────
-# Title
+# Header (logo + title)
 # ──────────────────────────────────────────────
-st.title("📊 Commercial Opportunity Comparator")
-st.markdown("Compare your Excel files between two quarters and export the report.")
+col_logo, col_title = st.columns([1, 5])
+with col_logo:
+    st.image("Thales Logo.png", width=150)
+with col_title:
+    st.title("📊 Commercial Opportunity Comparator")
+    st.markdown("Compare your Excel files between two quarters and export the report.")
 
 # ──────────────────────────────────────────────
 # File upload
