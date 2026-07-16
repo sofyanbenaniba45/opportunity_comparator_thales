@@ -409,4 +409,4 @@ else:
         """)
 
 st.markdown("---")
-st.caption("Développé par Sofyan BENANIBA")
+st.caption("For any questions or enhancement requests, please contact sofyan.benaniba@thalesgroup.com")
