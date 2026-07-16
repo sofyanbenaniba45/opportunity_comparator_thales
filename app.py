@@ -26,6 +26,9 @@ st.set_page_config(
 # ──────────────────────────────────────────────
 st.markdown("""
 <style>
+    .block-container {
+        padding-top: 1rem;
+    }
     .kpi-card {
         background: #f8f9fa;
         border-radius: 10px;
@@ -416,4 +419,9 @@ else:
         """)
 
 st.markdown("---")
-st.caption("For any questions or enhancement requests, please contact sofyan.benaniba@thalesgroup.com")
+st.markdown(
+    '<p style="text-align:right; color:#666; font-size:0.85rem;">'
+    'For any questions or enhancement requests, please contact sofyan.benaniba@thalesgroup.com'
+    '</p>',
+    unsafe_allow_html=True,
+)
