@@ -2,6 +2,8 @@
 
 Application Streamlit locale pour comparer deux fichiers Excel d'opportunités entre deux trimestres.
 
+**Auteur :** Sofyan BENANIBA
+
 ## Prérequis
 
 - Python 3.10 ou supérieur

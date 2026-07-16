@@ -1,5 +1,6 @@
 """
 Streamlit application to compare commercial opportunities between two quarters.
+Auteur : Sofyan BENANIBA
 Launch: streamlit run app.py
 """
 import io
@@ -406,3 +407,6 @@ else:
         | Project Alpha | BL1 | In Progress | 50,000 | ... |
         | Project Beta | BL2 | Won | 120,000 | ... |
         """)
+
+st.markdown("---")
+st.caption("Développé par Sofyan BENANIBA")
