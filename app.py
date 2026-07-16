@@ -17,7 +17,7 @@ from word_export import generate_word, generate_word_by_ou
 # ──────────────────────────────────────────────
 st.set_page_config(
     page_title="Opportunity Comparator",
-    page_icon="📊",
+    page_icon="📈",
     layout="wide",
 )
 
@@ -55,7 +55,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.title("Opportunity Comparator")
+st.title("📈 Commercial Opportunity Comparator")
 st.markdown("Compare your Excel files between two quarters and export the report.")
 
 # ──────────────────────────────────────────────
