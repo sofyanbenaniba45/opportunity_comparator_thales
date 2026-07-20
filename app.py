@@ -4,7 +4,10 @@ Auteur : Sofyan BENANIBA
 Launch: streamlit run app.py
 """
 import base64
+import datetime
 import io
+import os
+import re
 import pandas as pd
 import streamlit as st
 import streamlit.components.v1 as components
@@ -76,7 +79,8 @@ components.html(
 # ──────────────────────────────────────────────
 # Header (logo + title)
 # ──────────────────────────────────────────────
-_logo_b64 = base64.b64encode(open("Thales Logo.png", "rb").read()).decode()
+_app_dir = os.path.dirname(os.path.abspath(__file__))
+_logo_b64 = base64.b64encode(open(os.path.join(_app_dir, "Thales Logo.png"), "rb").read()).decode()
 st.markdown(
     f'<img src="data:image/png;base64,{_logo_b64}" width="420">',
     unsafe_allow_html=True,
@@ -158,16 +162,15 @@ if file_prev and file_curr:
         if cols_prev != cols_curr:
             missing_in_curr = cols_prev - cols_curr
             missing_in_prev = cols_curr - cols_prev
-            msg = "The two files do not have the same columns.\n\n"
+            msg = "The two files do not have the same columns — the comparison will use the **current file's columns** only.\n\n"
             if missing_in_curr:
-                msg += f"- Columns in N-1 but missing in current: **{', '.join(missing_in_curr)}**\n"
+                msg += f"- Columns in N-1 but missing in current (ignored): **{', '.join(missing_in_curr)}**\n"
             if missing_in_prev:
-                msg += f"- Columns in current but missing in N-1: **{', '.join(missing_in_prev)}**\n"
-            st.error(msg)
-            st.stop()
+                msg += f"- Columns in current but missing in N-1 (shown as new): **{', '.join(missing_in_prev)}**\n"
+            st.warning(msg)
 
-        if KEY_COL not in df_prev.columns:
-            st.error(f"Key column **'{KEY_COL}'** not found in the files.")
+        if KEY_COL not in df_prev.columns or KEY_COL not in df_curr.columns:
+            st.error(f"Key column **'{KEY_COL}'** not found in both files.")
             st.stop()
 
         # Detect GBU/BL column
@@ -238,7 +241,7 @@ if file_prev and file_curr:
 
         search_query = st.text_input("🔎 Search by Opportunity Name", placeholder="Type to filter...")
 
-        filter_col1, filter_col2 = st.columns([1, 2])
+        filter_col1, filter_col2, filter_col3, filter_col4 = st.columns([1, 2, 1, 1])
 
         with filter_col1:
             status_filter = st.selectbox(
@@ -261,6 +264,12 @@ if file_prev and file_curr:
 
         with filter_col2:
             gbu_filter = st.selectbox("Filter by GBU/BL", gbu_options)
+
+        with filter_col3:
+            sort_col = st.selectbox("Sort by column", ["(None)"] + result["columns"])
+
+        with filter_col4:
+            sort_order = st.selectbox("Order", ["Ascending (A→Z / 0→9)", "Descending (Z→A / 9→0)"])
 
         # ─────────────────────────────────────
         # Build display table
@@ -300,12 +309,35 @@ if file_prev and file_curr:
                     ) == gbu_filter
                 ]
 
+            # Sort
+            if sort_col != "(None)":
+                def natural_sort_key(col: pd.Series) -> pd.Series:
+                    if pd.api.types.is_numeric_dtype(col) or pd.api.types.is_datetime64_any_dtype(col):
+                        return col
+                    return col.astype(str).str.lower().apply(
+                        lambda s: re.sub(r"\d+", lambda m: m.group().zfill(15), s)
+                    )
+
+                df_display = df_display.sort_values(
+                    by=sort_col,
+                    ascending=sort_order.startswith("Ascending"),
+                    key=natural_sort_key,
+                    na_position="last",
+                )
+
             if df_display.empty:
                 st.info("No data for this filter.")
             else:
                 columns = result["columns"]
                 diff_map = result["diff_map"]
                 prev_indexed = result["prev_indexed"]
+
+                def format_val(val) -> str:
+                    if pd.isna(val):
+                        return ""
+                    if isinstance(val, (pd.Timestamp, datetime.date, datetime.datetime)):
+                        return val.strftime("%Y-%m-%d")
+                    return str(val)
 
                 # ── HTML table rendering ──
                 def build_html_table(df: pd.DataFrame) -> str:
@@ -339,7 +371,7 @@ if file_prev and file_curr:
 
                         for col in columns:
                             val = row.get(col, "")
-                            val_str = "" if pd.isna(val) else str(val)
+                            val_str = format_val(val)
                             cell_style = "border:1px solid #ccc;padding:4px 8px;font-size:12px;"
 
                             if status == "deleted":
@@ -352,7 +384,7 @@ if file_prev and file_curr:
 
                             elif status == "modified" and col in changed_cols:
                                 old_val = prev_indexed.loc[norm_key, col] if col in prev_indexed.columns else ""
-                                old_str = "" if pd.isna(old_val) else str(old_val)
+                                old_str = format_val(old_val)
                                 cell_style += "background:#FFF3E0;"
                                 inner = ""
                                 if old_str:

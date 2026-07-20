@@ -94,7 +94,7 @@ def compare_dataframes(df_prev: pd.DataFrame, df_curr: pd.DataFrame) -> dict:
     def build_df(keys, source_indexed, status):
         if not keys:
             return pd.DataFrame(columns=columns + ["__status__"])
-        rows = source_indexed.loc[list(keys), columns].copy()
+        rows = source_indexed.loc[list(keys)].reindex(columns=columns).copy()
         rows["__status__"] = status
         return rows.reset_index(drop=True)
 

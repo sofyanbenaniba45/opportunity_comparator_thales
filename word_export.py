@@ -1,6 +1,7 @@
 """
 Word report generation (.docx).
 """
+import datetime
 import io
 import pandas as pd
 from docx import Document
@@ -111,7 +112,12 @@ def _write_table(doc, columns: list, df_group: pd.DataFrame, diff_map: dict):
         for col_idx, col_name in enumerate(columns):
             cell = tbl_row.cells[col_idx]
             val = row.get(col_name, "")
-            val_str = "" if (val is None or (isinstance(val, float) and pd.isna(val))) else str(val)
+            if val is None or (isinstance(val, float) and pd.isna(val)):
+                val_str = ""
+            elif isinstance(val, (datetime.date, datetime.datetime, pd.Timestamp)):
+                val_str = val.strftime("%Y-%m-%d")
+            else:
+                val_str = str(val)
 
             if status == "new":
                 highlight = HEX_NEW

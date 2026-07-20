@@ -1,6 +1,7 @@
 """
 Excel report generation.
 """
+import datetime
 import io
 import pandas as pd
 from openpyxl import Workbook
@@ -57,6 +58,9 @@ def _write_sheet(ws, columns: list, df_gbu: pd.DataFrame, diff_map: dict):
             cell = ws.cell(row=row_idx, column=col_idx)
             cell.border = BORDER_THIN
             cell.alignment = Alignment(wrap_text=True, vertical="top")
+
+            if isinstance(cell.value, (datetime.date, datetime.datetime, pd.Timestamp)):
+                cell.number_format = "yyyy-mm-dd"
 
             if status == "new":
                 cell.fill = FILL_NEW

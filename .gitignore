@@ -19,3 +19,7 @@ Thumbs.db
 *.xlsx
 *.docx
 *.xls
+
+# PyInstaller build artifacts
+build/
+dist/
